@@ -14,36 +14,83 @@
             <img src="imagenes/juego.png" class="logo" alt="logo" width="80px" height="80px">
         </a>
         <nav>
-            <ul id="navbar" class="navbar">
-                <li><a href="#">Inicio</a></li>
-                <li><a href="pages/tienda.html">Tienda</a></li>
-                <li><a href="pages/registro.html">Regístrate</a></li>
+            <div>
+                <ul id="navbar" class="navbar">
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="pages/tienda.html">Tienda</a></li>
+                    <li><a href="pages/registro.html">Regístrate</a></li>
+                    <li><a href="pages/carrito.html"><i class="fa-solid fa-basket-shopping"></i></a></li>
+
+                </ul>
+            </div>
+            <div class="movil">
                 <a href="pages/carrito.html"><i class="fa-solid fa-basket-shopping"></i></a>
-                
-            </ul>
-            
-            <img src="imagenes/menu-abierto.png" alt="" class="navMovile" width="50px" height="50px">
+                <img src="imagenes/menu-abierto.png" alt="" class="navMovile" width="50px" height="50px">
+            </div>
         </nav>
     </header>
     <main class="main">
         <section class="banner">
             <h1>Los mejores Videojuegos.<br>Sumérjete mundos increibles.</h1>
-            <button>Comprar</button>
+            <a href="#productosPopulares"><button>Comprar</button></a>
         </section>
-        <section class="productosPopulares">
+        <section class="productosPopulares" id="productosPopulares">
             <h3>Más populares:</h3>
 
             <div class="contenedorProductos">
-                <div class="producto"></div>
-                <div class="producto"></div>
-                <div class="producto"></div>
-                <div class="producto"></div>
-                <div class="producto"></div>
+                <div class="producto">
+
+                    <a href=""><button>Ver en tienda</button></a>
+                </div>
+                <div class="producto">
+                    
+                    <a href=""><button>Ver en tienda</button></a>
+                </div>
+                <div class="producto">
+                    
+                    <a href=""><button>Ver en tienda</button></a>
+                </div>
+                <div class="producto">
+                    
+                    <a href=""><button>Ver en tienda</button></a>
+                </div>
+                <div class="producto">
+                    
+                    <a href=""><button>Ver en tienda</button></a>
+                </div>
             </div>
+        </section>
+        <section class="ubicacion">
+            <h3>Nuestra ubicación:</h3>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4874.9787332021515!2d-58.40902735464221!3d-34.575521962830074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb57a4147c5c7%3A0xfc930bf72fdf871f!2zSmFyZMOtbiBKYXBvbsOpcw!5e0!3m2!1ses!2sar!4v1783580436274!5m2!1ses!2sar" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </section>
     </main>
     <footer class="footer">
-
+        <div class="col">
+            <h4>Contacto</h4>
+            <p><strong>Dirección:</strong> Av. Siempreviva 742, Ciudad Autónoma de Buenos Aires</p>
+            <p><strong>Teléfono:</strong> +54 11 1234 5678</p>
+            <p><strong>Horario:</strong> 9:00 - 18:00, Lunes a Viernes</p>
+            <div class="follow">
+                <h4>Seguinos</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i><i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i><i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h4>Mi Cuenta</h4>
+            <a href="pages/registro.html">Regístrate</a>
+            <a href="pages/tienda.html">Tienda</a>
+            <a href="pages/carrito.html">Ver Carrito</a>
+            <a href="#">Ayuda</a>
+        </div>
+        <div class="copyright">
+            <p>© 2026, Javier Sommer | Talento Tech - Ecommerce</p>
+        </div>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
