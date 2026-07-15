@@ -6,7 +6,7 @@ const limitado = "&page_size=5"
 const contenedorTienda = document.querySelector(".productosTienda");
 const contenedorHome = document.querySelector(".productosHome");
 
-let productosGlobales = [];
+//let productosGlobales = [];
 
 if(contenedorTienda){
 
@@ -69,8 +69,7 @@ function extraerAPI(url, contenedor){
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            productosGlobales = data.results;
-            mostrarProductos(productosGlobales, contenedor);
+            mostrarProductos(data.results, contenedor);
         })
         .catch(error => {
             console.error(error);
@@ -106,7 +105,7 @@ function mostrarProductos(productos, contenedor){
                 })
             contenedor.innerHTML = cardsHTML.join('');
             document.getElementById('loader').style.display = "none";
-            adjuntarEventos();
+            adjuntarEventos(productos);
 }
 
 function generarPrecio(rating, id){
@@ -282,8 +281,8 @@ function agregarAlCarrito(producto) {
     mostrarToast(`${producto.name} agregado al carrito!`);
 }
 
-function adjuntarEventos() {
-    productosGlobales.forEach(producto => {
+function adjuntarEventos(productos) {
+    productos.forEach(producto => {
         const boton = document.getElementById(`btn-agregar-${producto.id}`);
         if (boton) {
             boton.addEventListener('click', () => {
@@ -422,3 +421,94 @@ function recalcularTotales() {
 
     actualizarTotal(subtotal);
 }
+
+// FORMULARIO:
+
+const formulario = document.getElementById('formularioRegistro');
+const nombreUsuario = document.getElementById('nombreUsuario');
+const correo = document.getElementById('tuCorreo');
+const password = document.getElementById('password');
+const repetir = document.getElementById('repetir');
+const terminos = document.getElementById('terminos');
+
+function mostrarEstadoCampo(input, esValido, mensaje = "") {
+    const padre = input.parentNode;
+    const textoError = padre.querySelector(".texto-error");
+    if(esValido){
+        padre.classList.remove("error");
+        textoError.textContent = "";
+    }else{
+        padre.classList.add("error");
+        textoError.textContent = mensaje;
+    }
+}
+
+const esCorreoValido = (correo) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(correo);
+};
+
+formulario.addEventListener("submit",(e)=>{
+    e.preventDefault();
+
+    let formularioValido = true;
+
+    if(nombreUsuario.value.trim() === ''){
+        mostrarEstadoCampo(nombreUsuario, false,"Ingresá un nombre de usuario.");
+        formularioValido = false;
+    }else{
+        mostrarEstadoCampo(nombreUsuario,true);
+    }
+
+    if(correo.value.trim() === '') {
+        mostrarEstadoCampo(correo, false, 'El correo electrónico es obligatorio.');
+        formularioValido = false;
+    }else if(!esCorreoValido(correo.value.trim())) {
+        mostrarEstadoCampo(correo, false, 'Ingresá un correo electrónico válido.');
+        formularioValido = false;
+    }else{
+        mostrarEstadoCampo(correo, true);
+    }
+
+    if(password.value.trim() === '' || password.value.length < 6){
+        mostrarEstadoCampo(password, false, "La contraseña debe tener al menos 6 caracteres.");
+        formularioValido = false;
+    }else{
+        mostrarEstadoCampo(password, true);
+    }
+
+    if(repetir.value.trim() === ''){
+        mostrarEstadoCampo(repetir, false, "Debes ingresar nuevamente la contraseña.");
+        formularioValido = false;
+    }else if(repetir.value !== password.value){
+        mostrarEstadoCampo(repetir, false, "Las contraseñas no coinciden.");
+        formularioValido = false;
+    }else{
+        mostrarEstadoCampo(repetir, true);
+    }
+
+    if(!terminos.checked){
+        mostrarEstadoCampo(terminos, false, "Debes aceptar los términos y condiciones.");
+        formularioValido = false;
+    }else{
+        mostrarEstadoCampo(terminos, true);
+    }
+
+    if(formularioValido){
+        const usuario = {
+            nombre: nombreUsuario.value.trim(), 
+            correo: correo.value.trim()};
+
+        localStorage.setItem("usuario",JSON.stringify(usuario));
+
+        mostrarToast("¡Registro realizado con éxito!");
+
+        formulario.reset();
+
+        mostrarEstadoCampo(nombreUsuario, true);
+        mostrarEstadoCampo(correo, true);
+        mostrarEstadoCampo(password, true);
+        mostrarEstadoCampo(repetir, true);
+        mostrarEstadoCampo(terminos, true);
+    }
+});

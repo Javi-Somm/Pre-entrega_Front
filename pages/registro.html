@@ -4,8 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://kit.fontawesome.com/1075d2217e.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    
+    <header class="header">
+        <a href="../index.html">
+            <img src="../imagenes/juego.png" class="logo" alt="logo" width="80px" height="80px">
+        </a>
+        <nav>
+            <div>
+                <ul id="navbar" class="navbar">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="tienda.html">Tienda</a></li>
+                    <li><a href="#">Regístrate</a></li>
+                    <li><a href="carrito.html"><i class="fa-solid fa-basket-shopping"></i></a></li>
+
+                </ul>
+            </div>
+            <div class="movil">
+                <a href="carrito.html"><i class="fa-solid fa-basket-shopping"></i></a>
+                <img src="../imagenes/menu-abierto.png" alt="" class="navMovile" width="50px" height="50px">
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="formDetails">
+            <form action="" id="formularioRegistro">
+                <h2>Crear cuenta</h2>
+                <p>¡Registrate y obten fabulosos descuentos!.</p>
+                <!-- Campo: Usuario -->
+                <div class="campo-control">
+                    <input type="text" id="nombreUsuario" name="nombre" placeholder="Nombre de usuario">
+                    <div class="texto-error"></div>
+                </div>
+
+                <!-- Campo: Correo electrónico -->
+                <div class="campo-control">
+                    <input type="text" id="tuCorreo" name="correo" placeholder="Correo electrónico">
+                    <div class="texto-error"></div>
+                </div>
+
+                <!-- Campo: contraseña -->
+                <div class="campo-control">
+                    <input type="password" id="password" name="password" placeholder="Contraseña">
+                    <div class="texto-error"></div>
+                </div>
+
+                <!-- Campo: repetir contraseña -->
+                <div class="campo-control">
+                    <input type="password" id="repetir" name="repetir" placeholder="Repetir contraseña">
+                    <div class="texto-error"></div>
+                </div>
+
+                <div class="campo-control">
+                    <input type="checkbox" name="terminos" id="terminos">
+                    <label for="terminos">Acepto los términos y condiciones.</label>
+                    <div class="texto-error"></div>
+                </div>
+
+                <button type="submit">Registrarse</button>
+            </form>
+        </section>
+        <div id="toast" class="toast-custom">
+            <span id="toastMensaje"></span>
+            <button id="btnCerrarToast">✕</button>
+        </div>
+    </main>
+    <script src="../script.js"></script>
 </body>
 </html>
