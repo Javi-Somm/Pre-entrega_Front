@@ -4,11 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../style.css">
     <script src="https://kit.fontawesome.com/1075d2217e.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <main>
-        <div class="containerProductos"></div>
+        <section>
+            <div id="loader" class="loader"></div>
+            <div class="productosTienda"></div>
+        </section>
+
+        <div id="overlayModal" class="modal-overlay">
+            <div class="modal-custom">
+                <div id="loaderModal" class="loader"></div>
+                <button id="btnCerrarModal" class="modal-cerrar">✕</button>
+                <div id="infoModal"></div>
+            </div>
+        </div>
+        <div id="toast" class="toast-custom">
+            <span id="toastMensaje"></span>
+            <button id="btnCerrarToast">✕</button>
+        </div>
     </main>
     <script src="../script.js"></script>
 </body>

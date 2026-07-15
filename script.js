@@ -1,29 +1,421 @@
 const API_KEY = "93a7d854bb9543f49790deef1b3049aa";
-const URL = `https://api.rawg.io/api/games?key=${API_KEY}`;
+const API = "https://api.rawg.io/api/games"
+const KEY = "?key="
+const limitado = "&ordering=-metacritic&page_size=5"
 
-const contenedor = document.querySelector(".containerProductos");
+const contenedorTienda = document.querySelector(".productosTienda");
+const contenedorHome = document.querySelector(".productosHome");
 
-fetch(URL)
-    .then(response => response.json())
-    .then(data => {
-        const productos = data.results;
-        const cardsHTML = productos.map(
-            ({id, background_image, name, rating}) => {
-                return `
-                    <div class="producto">
-                        <img src="${background_image}" alt="${name}">
-                        <div class="producto-descripcion">
-                            <h3>${name}</h3>
-                            <p>⭐ ${rating}</p>
-                        </div>    
-                        <a id="btn-agregar-${id}" class="carrito">
-                            <i class="fa-solid fa-basket-shopping"></i> Agregar
-                        </a>
-                    </div>
-                `;
-            })
-        contenedor.innerHTML = cardsHTML.join('');    
+let productosGlobales = [];
+
+if(contenedorTienda){
+
+    document.getElementById('loader').style.display = "block";
+
+    const pedirTodos = API + KEY + API_KEY;
+    
+    extraerAPI(pedirTodos, contenedorTienda);
+
+    // fetch(API + KEY + API_KEY)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         const productos = data.results;
+    //         productosGlobales = productos;
+
+    //         const cardsHTML = productos.map(
+    //             ({id, background_image, name, rating}) => {
+    
+    //                 const precio = generarPrecio(rating, id);
+    
+    //                 return `
+    //                     <div class="producto">
+    //                         <img src="${background_image}" alt="${name}">
+    //                         <div class="producto-descripcion">
+    //                             <h3>${name}</h3>
+    //                             <p>
+    //                                 ${generarEstrellas(rating)}
+    //                                 ${rating.toLocaleString("es-AR")}
+    //                             </p>
+    //                             <h4>$${precio.toLocaleString("es-AR")}</h4>
+    //                         </div>
+    //                         <button id="btn-ver-${id}" class="ver-descripcion">
+    //                             Ver descripción
+    //                         </button>    
+    //                         <button id="btn-agregar-${id}" class="carrito">
+    //                             <i class="fa-solid fa-basket-shopping"></i>
+    //                             Agregar
+    //                         </button>
+    //                     </div>
+    //                 `;
+    //             })
+    //         contenedorTienda.innerHTML = cardsHTML.join('');
+    //         document.getElementById('loader').style.display = "none";
+    //         adjuntarEventos();   
+    //     })
+    //     .catch(error => {
+    //         console.error(error);
+    //     });
+}
+
+if(contenedorHome){
+    document.getElementById('loader').style.display = "block";
+
+    const pedirCinco = API + KEY + API_KEY + limitado;
+
+    extraerAPI(pedirCinco, contenedorHome);
+}
+
+function extraerAPI(url, contenedor){
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            productosGlobales = data.results;
+            mostrarProductos(productosGlobales, contenedor);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+function mostrarProductos(productos, contenedor){
+    const cardsHTML = productos.map(
+                ({id, background_image, name, rating}) => {
+    
+                    const precio = generarPrecio(rating, id);
+    
+                    return `
+                        <div class="producto">
+                            <img src="${background_image}" alt="${name}">
+                            <div class="producto-descripcion">
+                                <h3>${name}</h3>
+                                <p>
+                                    ${generarEstrellas(rating)}
+                                    ${rating.toLocaleString("es-AR")}
+                                </p>
+                                <h4>$${precio.toLocaleString("es-AR")}</h4>
+                            </div>
+                            <button id="btn-ver-${id}" class="ver-descripcion">
+                                Ver descripción
+                            </button>    
+                            <button id="btn-agregar-${id}" class="carrito">
+                                <i class="fa-solid fa-basket-shopping"></i>
+                                Agregar
+                            </button>
+                        </div>
+                    `;
+                })
+            contenedor.innerHTML = cardsHTML.join('');
+            document.getElementById('loader').style.display = "none";
+            adjuntarEventos();
+}
+
+function generarPrecio(rating, id){
+
+    const base = rating * 10000;
+
+    const variacion = (id % 11 - 5) * 1000;
+
+    const precio = Math.round((base + variacion) / 1000) * 1000 - 1;
+
+    console.log(`rating ${rating} base ${base} id ${id} variacion ${variacion} precio ${precio}`);
+
+    return precio;
+
+    // if(producto.metacritic >= 95){
+
+    //     precio = 79999;
+
+    // }else if(producto.metacritic >= 90){
+
+    //     precio = 69999;
+
+    // }else if(producto.metacritic >= 85){
+
+    //     precio = 59999;
+
+    // }else if(producto.metacritic >= 80){
+
+    //     precio = 49999;
+
+    // }else{
+
+    //     precio = 39999;
+
+    // }   
+
+    // precio += (producto.added % 5) * 1000;
+    // precio -= 1;
+
+    // return precio;
+}
+
+function generarEstrellas(rating){
+
+    const llenas = Math.round(rating);
+
+    let html = "";
+
+    for(let i = 0; i < llenas; i++){
+        html += '<i class="fa-solid fa-star"></i>';
+    }
+
+    for(let i = llenas; i < 5; i++){
+        html += '<i class="fa-regular fa-star"></i>';
+    }
+
+    return html;
+}
+
+// MODAL:
+
+function abrirModal(id) {
+
+    console.log("cargando");
+    document.getElementById('overlayModal').classList.add('visible');
+    document.getElementById('infoModal').innerHTML = "";
+    document.getElementById('loaderModal').style.display = "block";
+
+    fetch(API + "/" + id + KEY + API_KEY)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+
+            const desarrolladores = data.developers.map(dev => dev.name).join(", ");
+            const anio = data.released.split("-")[0];
+            const generos = data.genres.map(genero => genero.name).join(", ");
+            const plataformas = data.platforms.map(p => p.platform.name).join(", ");
+
+            document.getElementById('loaderModal').style.display = "none";
+
+            document.getElementById('infoModal').innerHTML = `
+                                                            <img src="${data.background_image}" alt="${data.name}">
+                                                            <h5>${data.name}</h5>
+                                                            <div>
+                                                                <p>Desarrolladores:</p>
+                                                                <p>${desarrolladores}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p>Lanzamiento:</p>
+                                                                <p>${anio}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p>Clasificacion:</p>
+                                                                <p>${generarEstrellas(data.rating)} ${data.rating.toLocaleString("es-AR")}</p>
+                                                            </div>
+                                                            <p>Descripcion:</p>
+                                                            <div class="contenedorDescripcion">
+                                                                <p>${data.description_raw}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p>Generos:</p>
+                                                                <p>${generos}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p>Plataformas:</p>
+                                                                <p>${plataformas}</p>
+                                                            </div>
+                                                            <h4>$${generarPrecio(data.rating, id).toLocaleString("es-AR")}</h4>`;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    
+    console.log(API + "/" + id + KEY + API_KEY);
+}
+
+function cerrarModal() {
+    document.getElementById('overlayModal').classList.remove('visible');
+    document.getElementById('infoModal').innerHTML = "";
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('btnCerrarModal').addEventListener('click', cerrarModal)
+    document.getElementById('overlayModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('overlayModal')) {
+            cerrarModal();
+        }
     })
-    .catch(error => {
-        console.error(error);
+})
+
+//TOAST:
+
+function mostrarToast(mensaje){
+    const toast = document.getElementById('toast');
+    const toastMensaje = document.getElementById('toastMensaje');
+
+    toastMensaje.textContent = mensaje;
+    toast.classList.add('visible');
+    setTimeout(ocultarToast,4500);
+}
+
+function ocultarToast(){
+    document.getElementById('toast').classList.remove('visible');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('btnCerrarToast').addEventListener('click',ocultarToast)
+})
+
+// AGREGAR AL CARRITO:
+
+function agregarAlCarrito(producto) {
+    let carrito = JSON.parse(localStorage.getItem('carritoDeCompras')) || [];
+
+    const indiceExistente = carrito.findIndex(item => item.id === producto.id);
+
+    if (indiceExistente !== -1) {
+        carrito[indiceExistente].cantidad++;
+    } else {
+        carrito.push({
+            id: producto.id,
+            title: producto.name,
+            price: generarPrecio(producto.rating, producto.id),
+            image: producto.background_image,
+            cantidad: 1
+        });
+    }
+
+    localStorage.setItem('carritoDeCompras', JSON.stringify(carrito));
+    mostrarToast(`${producto.name} agregado al carrito!`);
+}
+
+function adjuntarEventos() {
+    productosGlobales.forEach(producto => {
+        const boton = document.getElementById(`btn-agregar-${producto.id}`);
+        if (boton) {
+            boton.addEventListener('click', () => {
+                agregarAlCarrito(producto);
+            });
+        }
+
+        const btnVer = document.getElementById(`btn-ver-${producto.id}`);
+        if (btnVer) {
+            btnVer.addEventListener('click', () => {
+                abrirModal(producto.id);
+            })
+        }
+
     });
+}
+
+// CARRITO:
+
+const tabla = document.querySelector("#tabla_carrito");
+
+document.addEventListener('DOMContentLoaded', () => {
+    if(tabla){
+        cargarProductosCarrito();
+    }
+});
+
+function cargarProductosCarrito() {
+    const carrito = JSON.parse(localStorage.getItem('carritoDeCompras')) || [];
+    const tabla = document.querySelector('#tabla_carrito');
+    tabla.innerHTML = '';
+
+    let subtotal = 0;
+
+    if (carrito.length === 0) {
+        tabla.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 20px;">
+                    Tu carrito está vacío. Agregá productos desde la 
+                    <a href="tienda.html">tienda</a>.
+                </td>
+            </tr>`;
+    } else {
+        carrito.forEach(producto => {
+            tabla.innerHTML += crearFilaProducto(producto);
+            subtotal += producto.price * producto.cantidad;
+        });
+    }
+
+    actualizarTotal(subtotal);
+    adjuntarEventosFila();
+}
+
+function crearFilaProducto(producto) {
+    const subtotalProducto = (producto.price * producto.cantidad).toLocaleString("es-AR");
+    const titulo = producto.title.substring(0, 20) + '...';
+    return `
+        <tr>
+            <td>
+                <button class="remove-btn" data-id="${producto.id}">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </td>
+            <td>
+                <img src="${producto.image}" alt="${producto.title}" 
+                     style="height:80px; width:auto; object-fit:contain;">
+            </td>
+            <td>${titulo}</td>
+            <td>$${producto.price.toLocaleString("es-AR")}</td>
+            <td>
+                <input type="number" value="${producto.cantidad}" min="1" 
+                       class="cantidad-producto" data-id="${producto.id}">
+            </td>
+            <td>$${subtotalProducto}</td>
+        </tr>
+    `;
+}
+
+function actualizarTotal(subtotal) {
+    document.querySelectorAll('#total').forEach(el => {
+        el.textContent = `$${subtotal.toLocaleString("es-AR")}`;
+    });
+}
+
+function adjuntarEventosFila() {
+
+    // Eliminar producto
+    document.querySelectorAll('.remove-btn').forEach(boton => {
+        boton.addEventListener('click', () => {
+            let carrito = JSON.parse(localStorage.getItem('carritoDeCompras')) || [];
+            const id = boton.dataset.id;
+            carrito = carrito.filter(item => String(item.id) !== String(id));
+            localStorage.setItem('carritoDeCompras', JSON.stringify(carrito));
+            cargarProductosCarrito();
+        });
+    });
+
+    // Cambiar cantidad
+    document.querySelectorAll('.cantidad-producto').forEach(input => {
+        input.addEventListener('change', () => {
+            const carrito = JSON.parse(localStorage.getItem('carritoDeCompras')) || [];
+            const id = input.dataset.id;
+            const nuevaCantidad = parseInt(input.value);
+
+            if (nuevaCantidad < 1) {
+                input.value = 1;
+                return;
+            }
+
+            const producto = carrito.find(item => String(item.id) === String(id));
+            if (producto) {
+                producto.cantidad = nuevaCantidad;
+                localStorage.setItem('carritoDeCompras', JSON.stringify(carrito));
+                recalcularTotales();
+            }
+        });
+    });
+}
+
+function recalcularTotales() {
+    const carrito = JSON.parse(localStorage.getItem('carritoDeCompras')) || [];
+    let subtotal = 0;
+
+    document.querySelectorAll('#tabla_carrito tr').forEach(fila => {
+        const input = fila.querySelector('.cantidad-producto');
+        if (input) {
+            const id = input.dataset.id;
+            const producto = carrito.find(item => String(item.id) === String(id));
+            if (producto) {
+                const subtotalFila = (producto.price * producto.cantidad).toLocaleString("es-AR");
+                fila.cells[5].textContent = `$${subtotalFila}`;
+                subtotal += producto.price * producto.cantidad;
+            }
+        }
+    });
+
+    actualizarTotal(subtotal);
+}
