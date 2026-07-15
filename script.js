@@ -1,7 +1,7 @@
 const API_KEY = "93a7d854bb9543f49790deef1b3049aa";
 const API = "https://api.rawg.io/api/games"
 const KEY = "?key="
-const limitado = "&ordering=-metacritic&page_size=5"
+const limitado = "&page_size=5"
 
 const contenedorTienda = document.querySelector(".productosTienda");
 const contenedorHome = document.querySelector(".productosHome");
@@ -117,8 +117,6 @@ function generarPrecio(rating, id){
 
     const precio = Math.round((base + variacion) / 1000) * 1000 - 1;
 
-    console.log(`rating ${rating} base ${base} id ${id} variacion ${variacion} precio ${precio}`);
-
     return precio;
 
     // if(producto.metacritic >= 95){
@@ -170,7 +168,6 @@ function generarEstrellas(rating){
 
 function abrirModal(id) {
 
-    console.log("cargando");
     document.getElementById('overlayModal').classList.add('visible');
     document.getElementById('infoModal').innerHTML = "";
     document.getElementById('loaderModal').style.display = "block";
@@ -178,7 +175,6 @@ function abrirModal(id) {
     fetch(API + "/" + id + KEY + API_KEY)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
 
             const desarrolladores = data.developers.map(dev => dev.name).join(", ");
             const anio = data.released.split("-")[0];
@@ -219,8 +215,6 @@ function abrirModal(id) {
         .catch(error => {
             console.error(error);
         });
-    
-    console.log(API + "/" + id + KEY + API_KEY);
 }
 
 function cerrarModal() {
@@ -229,12 +223,17 @@ function cerrarModal() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('btnCerrarModal').addEventListener('click', cerrarModal)
-    document.getElementById('overlayModal').addEventListener('click', (e) => {
-        if (e.target === document.getElementById('overlayModal')) {
-            cerrarModal();
-        }
-    })
+    const btnCerrarModal = document.getElementById("btnCerrarModal");
+
+    if(btnCerrarModal){
+        btnCerrarModal.addEventListener("click", cerrarModal);
+        document.getElementById('overlayModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('overlayModal')) {
+                cerrarModal();
+            }
+        })
+    }
+    //document.getElementById('btnCerrarModal').addEventListener('click', cerrarModal)
 })
 
 //TOAST:
@@ -253,7 +252,11 @@ function ocultarToast(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-    document.getElementById('btnCerrarToast').addEventListener('click',ocultarToast)
+    const btnCerrarToast = document.getElementById("btnCerrarToast");
+
+    if(btnCerrarToast){
+        btnCerrarToast.addEventListener("click", ocultarToast);
+    }
 })
 
 // AGREGAR AL CARRITO:
