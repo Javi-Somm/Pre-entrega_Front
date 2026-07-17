@@ -15,46 +15,6 @@ if(contenedorTienda){
     const pedirTodos = API + KEY + API_KEY;
     
     extraerAPI(pedirTodos, contenedorTienda);
-
-    // fetch(API + KEY + API_KEY)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         const productos = data.results;
-    //         productosGlobales = productos;
-
-    //         const cardsHTML = productos.map(
-    //             ({id, background_image, name, rating}) => {
-    
-    //                 const precio = generarPrecio(rating, id);
-    
-    //                 return `
-    //                     <div class="producto">
-    //                         <img src="${background_image}" alt="${name}">
-    //                         <div class="producto-descripcion">
-    //                             <h3>${name}</h3>
-    //                             <p>
-    //                                 ${generarEstrellas(rating)}
-    //                                 ${rating.toLocaleString("es-AR")}
-    //                             </p>
-    //                             <h4>$${precio.toLocaleString("es-AR")}</h4>
-    //                         </div>
-    //                         <button id="btn-ver-${id}" class="ver-descripcion">
-    //                             Ver descripción
-    //                         </button>    
-    //                         <button id="btn-agregar-${id}" class="carrito">
-    //                             <i class="fa-solid fa-basket-shopping"></i>
-    //                             Agregar
-    //                         </button>
-    //                     </div>
-    //                 `;
-    //             })
-    //         contenedorTienda.innerHTML = cardsHTML.join('');
-    //         document.getElementById('loader').style.display = "none";
-    //         adjuntarEventos();   
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     });
 }
 
 if(contenedorHome){
